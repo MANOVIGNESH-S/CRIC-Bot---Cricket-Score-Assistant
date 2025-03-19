@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Score - Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/assets/css/fontawesome.css">
+    <link rel="stylesheet" href="static/assets/css/style.css">
+    <link rel="stylesheet" href="static/assets/css/owl.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #1F2669;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand h2 {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .nav-link {
+            color: #ffffff !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #ffc107 !important;
+        }
+
+        .container.dashboard {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-header {
+            border-bottom: 2px solid #1F2669;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            color: #1F2669;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #1F2669;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: "";
+            width: 4px;
+            height: 24px;
+            background-color: #1F2669;
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        .form-container {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #495057;
+        }
+
+        .form-control {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background-color: #1F2669;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #141a4d;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .table th {
+            background-color: #1F2669;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .table tr:hover {
+            background-color: #e9ecef;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-all-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #1F2669;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .view-all-btn:hover {
+            background-color: #141a4d;
+            text-decoration: none;
+            color: white;
+        }
+
+        footer {
+            background-color: #1F2669;
+            padding: 20px 0;
+            color: white;
+            margin-top: 50px;
+        }
+
+        /* Flash messages */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+      <nav class="navbar navbar-expand-lg">
+        <div class="container">
+          <a class="navbar-brand" href="{{ url_for('.adminhome') }}"><h2>Cricket Score</h2></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url_for('.adminhome') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('.uploadnews') }}">Upload News</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('.viewnews') }}">View News</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('.login') }}">Logout</a>
+                </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Banner -->
+    <div class="banner header-text">
+      <div class="owl-banner owl-carousel">
+        <div class="banner-item-01">
+          <div class="text-content">
+            <h4>Cricket Score Management</h4>
+            <h2>Admin Dashboard</h2>
+          </div>
+        </div>
+        <div class="banner-item-02">
+          <div class="text-content">
+            <h4>Match Management</h4>
+            <h2>Add and update match details</h2>
+          </div>
+        </div>
+        <div class="banner-item-03">
+          <div class="text-content">
+            <h4>Live Scores</h4>
+            <h2>Keep fans updated with real-time scores</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flash Messages -->
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="container dashboard">
+        <h1 class="dashboard-header">Admin Dashboard</h1>
+
+        <!-- Add Match Form -->
+        <h2 class="section-title">Add New Match</h2>
+        <div class="form-container">
+            <form action="{{ url_for('add_match') }}" method="POST" class="row">
+                <div class="col-md-3 form-group">
+                    <label for="team1">Team 1</label>
+                    <input type="text" id="team1" name="team1" class="form-control" placeholder="Team 1" required>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="team2">Team 2</label>
+                    <input type="text" id="team2" name="team2" class="form-control" placeholder="Team 2" required>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="match_date">Match Date</label>
+                    <input type="date" id="match_date" name="match_date" class="form-control" required>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="venue">Venue</label>
+                    <input type="text" id="venue" name="venue" class="form-control" placeholder="Stadium Name" required>
+                </div>
+                <div class="col-12 form-group mt-3">
+                    <button type="submit" class="btn-primary">Add Match</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Matches Table -->
+        <h2 class="section-title">Upcoming & Ongoing Matches</h2>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Teams</th>
+                        <th>Date</th>
+                        <th>Venue</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for match in matches %}
+                    <tr>
+                        <td>{{ match[0] }}</td>
+                        <td>{{ match[1] }} vs {{ match[2] }}</td>
+                        <td>{{ match[3] }}</td>
+                        <td>{{ match[4] }}</td>
+                        <td>{{ match[5] }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <form action="{{ url_for('update_match', match_id=match[0]) }}" method="POST" class="d-inline">
+                                    <div class="input-group">
+                                        <input type="text" name="status" class="form-control" placeholder="Update Status">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn-primary">Update</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <a href="{{ url_for('delete_match', match_id=match[0]) }}" class="btn-danger" onclick="return confirm('Are you sure you want to delete this match?')">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Update Scores Form -->
+        <h2 class="section-title">Update Match Scores</h2>
+        <div class="form-container">
+            <form action="{{ url_for('update_score') }}" method="POST" class="row">
+                <div class="col-md-3 form-group">
+                    <label for="match_id">Select Match</label>
+                    <select id="match_id" name="match_id" class="form-control" required>
+                        {% for match in matches %}
+                        <option value="{{ match[0] }}">{{ match[1] }} vs {{ match[2] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="team">Team Name</label>
+                    <input type="text" id="team" name="team" class="form-control" placeholder="Team Name" required>
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="runs">Runs</label>
+                    <input type="number" id="runs" name="runs" class="form-control" placeholder="Runs" required>
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="wickets">Wickets</label>
+                    <input type="number" id="wickets" name="wickets" class="form-control" placeholder="Wickets" required>
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="overs">Overs</label>
+                    <input type="number" id="overs" step="0.1" name="overs" class="form-control" placeholder="Overs" required>
+                </div>
+                <div class="col-12 form-group mt-3">
+                    <button type="submit" class="btn-primary">Update Score</button>
+                </div>
+            </form>
+        </div>
+
+        <a href="{{ url_for('view_scores') }}" class="view-all-btn">View All Scores</a>
+    </div>
+
+    <footer>
+      <div class="container">
+    <p style="color:white;">&copy; 2025 Cricket Score Management System. All Rights Reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="static/vendor/jquery/jquery.min.js"></script>
+    <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Additional Scripts -->
+    <script src="static/assets/js/custom.js"></script>
+    <script src="static/assets/js/owl.js"></script>
+
+</body>
+</html>

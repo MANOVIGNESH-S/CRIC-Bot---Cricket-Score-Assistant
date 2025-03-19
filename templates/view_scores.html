@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Cricket Score Management System - Match Scores">
+  <meta name="author" content="">
+  <link rel="icon" href="static/assets/images/favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap"
+    rel="stylesheet">
+
+  <title>Match Scores</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Additional CSS Files -->
+  <link rel="stylesheet" href="static/assets/css/fontawesome.css">
+  <link rel="stylesheet" href="static/assets/css/style.css">
+  <link rel="stylesheet" href="static/assets/css/owl.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+      margin: 0; /* Remove default margin */
+      padding: 0; /* Remove default padding */
+      height: 100vh; /* Make body full height */
+      display: flex; /* Use flexbox for vertical alignment */
+      flex-direction: column; /* Stack elements vertically */
+    }
+
+    .navbar {
+      background-color: #1F2669;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-brand h2 {
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .nav-link {
+      color: #ffffff !important;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: #ffc107 !important;
+    }
+
+    .content-wrapper {
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      margin-top: 40px;
+      margin-bottom: 20px; /* Reduced margin bottom */
+      flex-grow: 1; /* Make content area grow to fill space */
+    }
+
+    .page-title {
+      color: #1F2669;
+      font-weight: 600;
+      border-bottom: 2px solid #1F2669;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+    }
+
+    .table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .table thead th {
+      background-color: #1F2669;
+      color: white;
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 14px;
+      padding: 15px;
+      border: none;
+      vertical-align: middle;
+    }
+
+    .table tbody tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    .table tbody tr:hover {
+      background-color: #e9ecef;
+      transition: background-color 0.3s ease;
+    }
+
+    .table td {
+      padding: 15px;
+      border-top: 1px solid #dee2e6;
+      vertical-align: middle;
+    }
+
+    .team-col {
+      font-weight: 600;
+      color: #1F2669;
+    }
+
+    .score-highlight {
+      font-weight: 700;
+      font-size: 18px;
+      color: #198754;
+    }
+
+    .btn-back {
+      background-color: #1F2669;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-weight: 500;
+      border: none;
+      transition: background-color 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 20px;
+    }
+
+    .btn-back:hover {
+      background-color: #141a4d;
+      color: white;
+      text-decoration: none;
+    }
+
+    .btn-back i {
+      margin-right: 8px;
+    }
+
+    footer {
+      background-color: #1F2669;
+      color: white;
+      padding: 20px 0;
+      margin-top: auto; /* Push footer to bottom */
+      text-align: center; /* Center footer content */
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 30px;
+      color: #6c757d;
+      font-style: italic;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .content-wrapper {
+        padding: 20px 15px;
+      }
+
+      .table thead th {
+        font-size: 12px;
+        padding: 10px;
+      }
+
+      .table td {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('adminhome') }}">
+          <h2>Cricket Score</h2>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+          aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('adminhome') }}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('uploadnews') }}">Upload News Information</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('viewnews') }}">View News Details</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Page Content -->
+  <br>
+  <br>
+
+  <div class="content-wrapper">
+    <h1 class="page-title">Match Scores</h1>
+
+    <br>
+
+    {% if scores %}
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Match ID</th>
+            <th>Team</th>
+            <th>Runs</th>
+            <th>Wickets</th>
+            <th>Overs</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for score in scores %}
+          <tr>
+            <td>#{{ score[0] }}</td>
+            <td class="team-col">{{ score[1] }}</td>
+            <td class="score-highlight">{{ score[2] }}</td>
+            <td>{{ score[3] }}</td>
+            <td>{{ score[4] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="no-data">
+      <p>No match scores available at the moment.</p>
+    </div>
+    {% endif %}
+
+    <a href="{{ url_for('adminhome') }}" class="btn-back">
+      <i class="fa fa-arrow-left"></i> Back to Admin Home
+    </a>
+  </div>
+
+  <footer>
+    <p style="color: white;">&copy; 2025 Cricket Score Management System. All Rights Reserved.</p>
+
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="static/vendor/jquery/jquery.min.js"></script>
+  <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Additional Scripts -->
+  <script src="static/assets/js/custom.js"></script>
+  <script src="static/assets/js/owl.js"></script>
+</body>
+
+</html>

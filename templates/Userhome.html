@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Official Live Cricket Scores and AI Assistant">
+    <meta name="author" content="BCCI Compliance">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap"
+        rel="stylesheet">
+
+    <title>BCCI Official Cricket Portal</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="static/assets/css/fontawesome.css">
+    <link rel="stylesheet" href="static/assets/css/style.css">
+    <link rel="stylesheet" href="static/assets/css/owl.css">
+
+    <style>
+        /* Fixed Header Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: #ffffff !important;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            padding-top: 80px;
+        }
+
+        .chat-container {
+            max-height: 400px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .user-message {
+            background: #1A237E;
+            color: white;
+            border-radius: 15px 15px 0 15px;
+            margin: 10px 0;
+            padding: 12px 20px;
+            max-width: 80%;
+            float: right;
+            clear: both;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .bot-message {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 15px 15px 15px 0;
+            margin: 10px 0;
+            padding: 12px 20px;
+            max-width: 80%;
+            float: left;
+            clear: both;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .bcci-badge {
+            background: #1A237E;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-left: 8px;
+        }
+
+        /* Reduced Spacing */
+        .latest-products {
+            margin-top: 30px !important;
+        }
+
+        .section-heading {
+            margin-bottom: 20px !important;
+        }
+
+        /* Header Color Fixes */
+        .navbar-brand h2 {
+            color: #1A237E !important;
+        }
+
+        .navbar-nav .nav-link {
+            color: #1A237E !important;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #2278fa !important;
+        }
+
+        /* Banner Adjustments */
+        .banner-item-01, .banner-item-02, .banner-item-03 {
+            padding: 150px 0px !important;
+        }
+    </style>
+
+    <style>
+        .match-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+
+        .match-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .match-header {
+            background-color: #2278fa;
+            color: white;
+            padding: 10px 15px;
+            font-weight: 600;
+        }
+
+        .team-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .vs {
+            font-weight: 700;
+            font-size: 18px;
+            color: #888;
+        }
+
+        .score {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .live-badge {
+            background-color: #ff3a3a;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            margin-top: 50px;
+        }
+
+        .match-info {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Fixed Header -->
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href=" ">
+                    <h2>🏏 BCCI Official Portal</h2>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ url_for('.home') }}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('.categorynews') }}">News</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#cricBotModal" data-toggle="modal">Match Analyst AI</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('.login') }}">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- CRIC Bot Modal -->
+    <div class="modal fade" id="cricBotModal" tabindex="-1" role="dialog" aria-labelledby="cricBotModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #1A237E; color: white;">
+                    <h5 class="modal-title" id="cricBotModalLabel">BCCI Match Analyst AI <span
+                            class="bcci-badge">Official</span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                        style="color: white;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="chat-container mb-3">
+                        <div class="bot-message">
+                            Welcome to BCCI's Official Match Analyst. As per 2023 Annual Report:
+                            <ul>
+                                <li>Data sources: ICC/BCCI official records</li>
+                                <li>Updated daily with match statistics</li>
+                                <li>Powered by Gemini AI with BCCI verification</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <div class="input-group">
+                            <input type="text" id="userInput" class="form-control"
+                                placeholder="Ask about match statistics..." aria-label="Ask question">
+                            <div class="input-group-append">
+                                <button class="btn" type="button" id="askButton"
+                                    style="background: #1A237E; color: white;">
+                                    <i class="fa fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Content -->
+    <div class="banner header-text">
+        <div class="owl-banner owl-carousel">
+            <div class="banner-item-01">
+                    <center><h4>Official Cricket Portal</h4></center>
+                    <center><h2>Authoritative scores and stats</h2></center>
+            </div>
+        </div>
+    </div>
+
+    <div class="latest-products">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="section-heading">
+                        <h2>Live Matches & Scores</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                {% if matches %}
+                {% for match in matches %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header bg-dark text-white">
+                            <h5>{{ match[1] }} vs {{ match[2] }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Date:</strong> {{ match[3] }}</p>
+                            <p><strong>Venue:</strong> {{ match[4] }}</p>
+                            <p><strong>Status:</strong> {{ match[5] or 'Upcoming' }}</p>
+
+                            {% if match[0] in scores_dict %}
+                            <div class="mt-3">
+                                <h6 class="text-center">SCORECARD</h6>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Team</th>
+                                            <th>Runs</th>
+                                            <th>Wickets</th>
+                                            <th>Overs</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if match[1] in scores_dict[match[0]] %}
+                                        <tr>
+                                            <td>{{ match[1] }}</td>
+                                            <td>{{ scores_dict[match[0]][match[1]]['runs'] }}</td>
+                                            <td>{{ scores_dict[match[0]][match[1]]['wickets'] }}</td>
+                                            <td>{{ scores_dict[match[0]][match[1]]['overs'] }}</td>
+                                        </tr>
+                                        {% endif %}
+                                        {% if match[2] in scores_dict[match[0]] %}
+                                        <tr>
+                                            <td>{{ match[2] }}</td>
+                                            <td>{{ scores_dict[match[0]][match[2]]['runs'] }}</td>
+                                            <td>{{ scores_dict[match[0]][match[2]]['wickets'] }}</td>
+                                            <td>{{ scores_dict[match[0]][match[2]]['overs'] }}</td>
+                                        </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <p class="text-center mt-3">No scores available yet</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="col-12">
+                    <p class="text-center">No matches scheduled at the moment</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="call-to-action">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="inner-content">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h4>Get Official Cricket Updates!</h4>
+                                <p>
+                                  Authoritative scores and verified statistics directly from the BCCI,
+                                  ensuring you have accurate information for all your needs.
+                                </p>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="https://www.bcci.tv" class="filled-button">Visit BCCI.tv</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="inner-content">
+                        <p>Official data provided by BCCI Compliance &copy; 2025 - All Rights Reserved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="static/vendor/jquery/jquery.min.js"></script>
+    <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Additional Scripts -->
+    <script src="static/assets/js/custom.js"></script>
+    <script src="static/assets/js/owl.js"></script>
+
+    <script>
+        // Auto-refresh every 60 seconds
+        setTimeout(function () {
+            location.reload();
+        }, 60000);
+
+        // Chat Script
+        document.getElementById('askButton').addEventListener('click', async () => {
+            const userInput = document.getElementById('userInput');
+            const question = userInput.value.trim();
+            if (!question) return;
+
+            const chatContainer = document.querySelector('.chat-container');
+            chatContainer.innerHTML += `<div class="user-message">${question}</div>`;
+
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ question: question })
+                });
+
+                const data = await response.json();
+                const formattedResponse = data.response
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/(\d+\.)/g, '<li>$1')
+                    .replace(/\n/g, '<br>');
+
+                chatContainer.innerHTML += `
+                    <div class="bot-message">
+                        ${formattedResponse.startsWith('<li>') ? `<ul>${formattedResponse}</ul>` : formattedResponse}
+                        <div class="mt-2 text-muted" style="font-size:0.8em;">
+                            Source: BCCI Official Records
+                        </div>
+                    </div>
+                `;
+
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            } catch (error) {
+                chatContainer.innerHTML += `
+                    <div class="bot-message">
+                        Apologies, we're experiencing high demand. Please refer to
+                        <a href="https://www.bcci.tv" target="_blank">BCCI.tv</a>
+                        for official updates.
+                    </div>
+                `;
+            }
+
+            userInput.value = '';
+        });
+
+        document.getElementById('userInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') document.getElementById('askButton').click();
+        });
+    </script>
+</body>
+</html>
